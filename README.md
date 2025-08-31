@@ -126,6 +126,97 @@ print("LC #20 Input: '()[]{}' ->", isValid("()[]{}"))  # True
 print("LC #20 Input: '(]' ->", isValid("(]"))          # False
 print("LC #20 Input: '({[]})' ->", isValid("({[]})"))  # True
 
+"""
+Day 16: Monotonic Stack Intro & Daily Temperatures
+Author: [Your Name]
+Date: [Today's Date]
+
+Topics Covered:
+1. What is a Monotonic Stack?
+2. LeetCode #739 - Daily Temperatures
+"""
+
+# ----------------------------------------------------
+# 1. Monotonic Stack Intro
+# ----------------------------------------------------
+"""
+A Monotonic Stack is a stack that is either entirely
+- Increasing (each new element >= top) OR
+- Decreasing (each new element <= top)
+
+Use cases:
+- Next Greater Element
+- Daily Temperatures
+- Stock Span problems
+"""
+
+# Simple Example: Next Greater Element
+def next_greater_element(arr):
+    stack = []
+    result = [-1] * len(arr)
+    for i in range(len(arr)-1, -1, -1):
+        while stack and stack[-1] <= arr[i]:
+            stack.pop()
+        if stack:
+            result[i] = stack[-1]
+        stack.append(arr[i])
+    return result
+
+print("Next Greater Element Example:", next_greater_element([2,1,2,4,3]))
+# Output: [4,2,4,-1,-1]
+
+
+# ----------------------------------------------------
+# 2. LeetCode #739 - Daily Temperatures
+# ----------------------------------------------------
+"""
+Problem:
+Given an array of daily temperatures T, return an array answer such that
+answer[i] is the number of days you have to wait after the i-th day to get a warmer temperature.
+If there is no future day, put 0.
+
+Example:
+Input: T = [73,74,75,71,69,72,76,73]
+Output: [1,1,4,2,1,1,0,0]
+
+Approach:
+- Use a monotonic decreasing stack that stores indices.
+- While the current temperature is greater than the stack’s top index temperature,
+  update result[stack_top] = current_index - stack_top.
+- Push current index into stack.
+
+Time Complexity: O(n)
+Space Complexity: O(n)
+"""
+
+def dailyTemperatures(temperatures):
+    n = len(temperatures)
+    answer = [0] * n
+    stack = []  # stores indices
+
+    for i, temp in enumerate(temperatures):
+        # while stack not empty and current temp > top's temp
+        while stack and temperatures[i] > temperatures[stack[-1]]:
+            prev_index = stack.pop()
+            answer[prev_index] = i - prev_index
+        stack.append(i)
+
+    return answer
+
+
+# Example test
+temps = [73,74,75,71,69,72,76,73]
+print("LC #739 Input:", temps)
+print("LC #739 Output:", dailyTemperatures(temps))
+# Expected: [1,1,4,2,1,1,0,0]
+
+
+# ----------------------------------------------------
+# Time Complexity Summary:
+# ----------------------------------------------------
+# Next Greater Element: O(n)
+# LC #739 Daily Temperatures: O(n)
+# ----------------------------------------------------
 
 # ----------------------------------------------------
 # Time Complexity Summary:
