@@ -224,3 +224,150 @@ print("LC #739 Output:", dailyTemperatures(temps))
 # Stack operations: push/pop/peek/isEmpty -> O(1)
 # LC #20 Valid Parentheses -> O(n)
 # ----------------------------------------------------
+
+"""
+Day 17: Queue, Deque & BFS
+Author: [Your Name]
+Date: [Today's Date]
+
+Topics Covered:
+1. Implementing Queue using collections.deque
+2. Implementing Deque (double-ended queue)
+3. BFS Traversal (on graphs and binary trees)
+"""
+
+from collections import deque
+
+# ----------------------------------------------------
+# 1. Queue using deque
+# ----------------------------------------------------
+"""
+Queue = FIFO (First In, First Out)
+Operations:
+- Enqueue (append at right)
+- Dequeue (pop from left)
+"""
+
+queue = deque()
+
+# Enqueue
+queue.append(10)
+queue.append(20)
+queue.append(30)
+print("Queue after enqueues:", list(queue))
+
+# Dequeue
+print("Dequeued element:", queue.popleft())
+print("Queue after dequeue:", list(queue))
+
+
+# ----------------------------------------------------
+# 2. Deque (Double-Ended Queue)
+# ----------------------------------------------------
+"""
+Deque allows insertion and deletion from both ends.
+Useful for sliding window and BFS problems.
+"""
+
+dq = deque([1, 2, 3])
+
+# Insert at both ends
+dq.appendleft(0)
+dq.append(4)
+print("Deque after insertions:", list(dq))
+
+# Remove from both ends
+dq.popleft()
+dq.pop()
+print("Deque after removals:", list(dq))
+
+
+# ----------------------------------------------------
+# 3. BFS Traversal in Graph
+# ----------------------------------------------------
+"""
+Breadth-First Search (BFS) explores level by level.
+
+Steps:
+1. Use a queue to process nodes
+2. Mark visited nodes
+3. Traverse neighbors
+
+Time Complexity: O(V + E)
+"""
+
+def bfs_graph(adj_list, start):
+    visited = set()
+    q = deque([start])
+    order = []
+
+    while q:
+        node = q.popleft()
+        if node not in visited:
+            visited.add(node)
+            order.append(node)
+            for neighbor in adj_list[node]:
+                if neighbor not in visited:
+                    q.append(neighbor)
+    return order
+
+# Example graph (adjacency list)
+graph = {
+    0: [1, 2],
+    1: [2, 3],
+    2: [4],
+    3: [4],
+    4: []
+}
+
+print("BFS on graph starting from node 0:", bfs_graph(graph, 0))
+# Output: [0, 1, 2, 3, 4]
+
+
+# ----------------------------------------------------
+# 4. BFS Traversal in Binary Tree
+# ----------------------------------------------------
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+def bfs_tree(root):
+    if not root:
+        return []
+    
+    result = []
+    q = deque([root])
+    
+    while q:
+        node = q.popleft()
+        result.append(node.val)
+        if node.left:
+            q.append(node.left)
+        if node.right:
+            q.append(node.right)
+    
+    return result
+
+# Example tree:
+#       1
+#      / \
+#     2   3
+#    / \
+#   4   5
+root = TreeNode(1)
+root.left = TreeNode(2, TreeNode(4), TreeNode(5))
+root.right = TreeNode(3)
+
+print("BFS on binary tree:", bfs_tree(root))
+# Output: [1, 2, 3, 4, 5]
+
+
+# ----------------------------------------------------
+# Time Complexity Summary:
+# ----------------------------------------------------
+# Queue/Deque operations: O(1)
+# BFS on Graph: O(V + E)
+# BFS on Binary Tree: O(n)
+# ----------------------------------------------------
