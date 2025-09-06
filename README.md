@@ -371,3 +371,121 @@ print("BFS on binary tree:", bfs_tree(root))
 # BFS on Graph: O(V + E)
 # BFS on Binary Tree: O(n)
 # ----------------------------------------------------
+
+"""
+Day 18: Binary Tree Traversals (Preorder, Inorder, Postorder)
+Author: [Your Name]
+Date: [Today's Date]
+
+Topics Covered:
+1. Preorder Traversal (Root -> Left -> Right)
+2. Inorder Traversal (Left -> Root -> Right)
+3. Postorder Traversal (Left -> Right -> Root)
+4. Both Recursive & Iterative Implementations
+"""
+
+from collections import deque
+
+# ----------------------------------------------------
+# 1. Define Tree Node
+# ----------------------------------------------------
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+
+# ----------------------------------------------------
+# 2. Recursive Traversals
+# ----------------------------------------------------
+def preorder_recursive(root):
+    if not root:
+        return []
+    return [root.val] + preorder_recursive(root.left) + preorder_recursive(root.right)
+
+def inorder_recursive(root):
+    if not root:
+        return []
+    return inorder_recursive(root.left) + [root.val] + inorder_recursive(root.right)
+
+def postorder_recursive(root):
+    if not root:
+        return []
+    return postorder_recursive(root.left) + postorder_recursive(root.right) + [root.val]
+
+
+# ----------------------------------------------------
+# 3. Iterative Traversals
+# ----------------------------------------------------
+def preorder_iterative(root):
+    if not root:
+        return []
+    stack, result = [root], []
+    while stack:
+        node = stack.pop()
+        result.append(node.val)
+        if node.right:
+            stack.append(node.right)
+        if node.left:
+            stack.append(node.left)
+    return result
+
+def inorder_iterative(root):
+    result, stack = [], []
+    curr = root
+    while stack or curr:
+        while curr:
+            stack.append(curr)
+            curr = curr.left
+        curr = stack.pop()
+        result.append(curr.val)
+        curr = curr.right
+    return result
+
+def postorder_iterative(root):
+    if not root:
+        return []
+    stack, result = [root], deque()
+    while stack:
+        node = stack.pop()
+        result.appendleft(node.val)
+        if node.left:
+            stack.append(node.left)
+        if node.right:
+            stack.append(node.right)
+    return list(result)
+
+
+# ----------------------------------------------------
+# 4. Example Usage
+# ----------------------------------------------------
+"""
+Example Tree:
+        1
+       / \
+      2   3
+     / \
+    4   5
+"""
+if __name__ == "__main__":
+    root = TreeNode(1)
+    root.left = TreeNode(2, TreeNode(4), TreeNode(5))
+    root.right = TreeNode(3)
+
+    print("Recursive Preorder:", preorder_recursive(root))   # [1,2,4,5,3]
+    print("Recursive Inorder:", inorder_recursive(root))     # [4,2,5,1,3]
+    print("Recursive Postorder:", postorder_recursive(root)) # [4,5,2,3,1]
+
+    print("Iterative Preorder:", preorder_iterative(root))   # [1,2,4,5,3]
+    print("Iterative Inorder:", inorder_iterative(root))     # [4,2,5,1,3]
+    print("Iterative Postorder:", postorder_iterative(root)) # [4,5,2,3,1]
+
+
+# ----------------------------------------------------
+# Time Complexity:
+# - Preorder/Inorder/Postorder: O(n)  (visit each node once)
+# Space Complexity:
+# - O(h) for recursion stack (h = height of tree)
+# - O(n) worst case for iterative stack
+# ----------------------------------------------------
