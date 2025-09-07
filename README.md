@@ -489,3 +489,98 @@ if __name__ == "__main__":
 # - O(h) for recursion stack (h = height of tree)
 # - O(n) worst case for iterative stack
 # ----------------------------------------------------
+
+"""
+Day 19: Binary Tree Level Order Traversal (LC #102)
+Author: [Your Name]
+Date: [Today's Date]
+
+Topics Covered:
+1. BFS Traversal in Binary Tree
+2. LeetCode #102 - Binary Tree Level Order Traversal
+"""
+
+from collections import deque
+
+# ----------------------------------------------------
+# 1. Define Tree Node
+# ----------------------------------------------------
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+
+# ----------------------------------------------------
+# 2. LeetCode #102 - Level Order Traversal
+# ----------------------------------------------------
+"""
+Problem:
+Given the root of a binary tree, return the level order traversal of its nodes' values.
+(i.e., from left to right, level by level).
+
+Example:
+Input: root = [3,9,20,null,null,15,7]
+Output: [[3],[9,20],[15,7]]
+
+Approach:
+- Use BFS with a queue.
+- For each level, process all nodes in the queue.
+- Append children to the queue for next level.
+- Store each level's values separately.
+
+Time Complexity: O(n) (each node visited once)
+Space Complexity: O(n) (queue stores nodes level by level)
+"""
+
+def levelOrder(root):
+    if not root:
+        return []
+    
+    result = []
+    q = deque([root])
+    
+    while q:
+        level_size = len(q)
+        level_nodes = []
+        
+        for _ in range(level_size):
+            node = q.popleft()
+            level_nodes.append(node.val)
+            if node.left:
+                q.append(node.left)
+            if node.right:
+                q.append(node.right)
+        
+        result.append(level_nodes)
+    
+    return result
+
+
+# ----------------------------------------------------
+# 3. Example Usage
+# ----------------------------------------------------
+"""
+Example Tree:
+        3
+       / \
+      9   20
+         /  \
+        15   7
+"""
+if __name__ == "__main__":
+    root = TreeNode(3)
+    root.left = TreeNode(9)
+    root.right = TreeNode(20, TreeNode(15), TreeNode(7))
+    
+    print("Level Order Traversal:", levelOrder(root))
+    # Expected Output: [[3],[9,20],[15,7]]
+
+
+# ----------------------------------------------------
+# Time Complexity:
+# - O(n), where n = number of nodes
+# Space Complexity:
+# - O(n), due to queue usage
+# ----------------------------------------------------
