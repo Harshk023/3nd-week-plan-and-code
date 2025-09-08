@@ -584,3 +584,117 @@ if __name__ == "__main__":
 # Space Complexity:
 # - O(n), due to queue usage
 # ----------------------------------------------------
+
+
+"""
+Day 20: Maximum Depth & Balanced Binary Tree
+Author: [Your Name]
+Date: [Today's Date]
+
+Problems Covered:
+1. LC #104 – Maximum Depth of Binary Tree
+2. LC #110 – Balanced Binary Tree
+"""
+
+# ----------------------------------------------------
+# 1. Define Tree Node
+# ----------------------------------------------------
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+
+# ----------------------------------------------------
+# 2. LC #104 - Maximum Depth of Binary Tree
+# ----------------------------------------------------
+"""
+Problem:
+Given the root of a binary tree, return its maximum depth.
+The maximum depth is the number of nodes along the longest path 
+from the root down to the farthest leaf node.
+
+Example:
+Input: root = [3,9,20,null,null,15,7]
+Output: 3
+
+Approach:
+- Recursively compute depth of left and right subtrees
+- Maximum depth = 1 + max(left_depth, right_depth)
+
+Time Complexity: O(n)
+Space Complexity: O(h), h = tree height
+"""
+
+def maxDepth(root):
+    if not root:
+        return 0
+    return 1 + max(maxDepth(root.left), maxDepth(root.right))
+
+
+# ----------------------------------------------------
+# 3. LC #110 - Balanced Binary Tree
+# ----------------------------------------------------
+"""
+Problem:
+Given a binary tree, determine if it is height-balanced.
+A height-balanced binary tree is defined as:
+- The left and right subtrees of every node differ in height by no more than 1.
+
+Example:
+Input: root = [3,9,20,null,null,15,7]
+Output: True
+
+Approach:
+- Recursively check height of left and right subtrees
+- If any subtree is unbalanced, propagate False
+- Use -1 to indicate imbalance
+
+Time Complexity: O(n)
+Space Complexity: O(h), recursion stack
+"""
+
+def isBalanced(root):
+    def check(node):
+        if not node:
+            return 0
+        left = check(node.left)
+        if left == -1:
+            return -1
+        right = check(node.right)
+        if right == -1:
+            return -1
+        if abs(left - right) > 1:
+            return -1
+        return 1 + max(left, right)
+    
+    return check(root) != -1
+
+
+# ----------------------------------------------------
+# 4. Example Usage
+# ----------------------------------------------------
+"""
+Example Tree:
+        3
+       / \
+      9   20
+         /  \
+        15   7
+"""
+if __name__ == "__main__":
+    root = TreeNode(3)
+    root.left = TreeNode(9)
+    root.right = TreeNode(20, TreeNode(15), TreeNode(7))
+
+    print("Max Depth of Tree (LC #104):", maxDepth(root))  # Output: 3
+    print("Is Balanced Tree? (LC #110):", isBalanced(root))  # Output: True
+
+
+# ----------------------------------------------------
+# Time Complexity Summary:
+# ----------------------------------------------------
+# LC #104 Maximum Depth: O(n), Space: O(h)
+# LC #110 Balanced Tree: O(n), Space: O(h)
+# ----------------------------------------------------
