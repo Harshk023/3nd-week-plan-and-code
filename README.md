@@ -698,3 +698,190 @@ if __name__ == "__main__":
 # LC #104 Maximum Depth: O(n), Space: O(h)
 # LC #110 Balanced Tree: O(n), Space: O(h)
 # ----------------------------------------------------
+
+"""
+Day 21: Mixed Tree Practice
+Author: [Your Name]
+Date: [Today's Date]
+
+Problems Covered:
+1. LC #112 – Path Sum
+2. LC #226 – Invert Binary Tree
+3. LC #543 – Diameter of Binary Tree
+4. LC #101 – Symmetric Tree
+5. LC #437 – Path Sum III
+"""
+
+# ----------------------------------------------------
+# Define TreeNode
+# ----------------------------------------------------
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+
+# ----------------------------------------------------
+# 1. LC #112 – Path Sum
+# ----------------------------------------------------
+"""
+Problem:
+Given the root of a binary tree and an integer targetSum,
+return true if the tree has a root-to-leaf path such that
+adding up all the values along the path equals targetSum.
+
+Approach:
+- DFS recursion: subtract node value from targetSum
+- If leaf node and targetSum == 0 → True
+- Else, recursively check left and right subtrees
+
+Time Complexity: O(n)
+"""
+
+def hasPathSum(root, targetSum):
+    if not root:
+        return False
+    if not root.left and not root.right and root.val == targetSum:
+        return True
+    return hasPathSum(root.left, targetSum - root.val) or hasPathSum(root.right, targetSum - root.val)
+
+
+# ----------------------------------------------------
+# 2. LC #226 – Invert Binary Tree
+# ----------------------------------------------------
+"""
+Problem:
+Invert a binary tree (mirror it).
+
+Approach:
+- Swap left and right recursively
+- Base case: if node is None, return
+
+Time Complexity: O(n)
+"""
+
+def invertTree(root):
+    if not root:
+        return None
+    root.left, root.right = invertTree(root.right), invertTree(root.left)
+    return root
+
+
+# ----------------------------------------------------
+# 3. LC #543 – Diameter of Binary Tree
+# ----------------------------------------------------
+"""
+Problem:
+The diameter is the length of the longest path between any two nodes.
+
+Approach:
+- Use DFS to compute height of subtrees
+- Track max(left_height + right_height) as diameter
+- Return height = 1 + max(left, right)
+
+Time Complexity: O(n)
+"""
+
+def diameterOfBinaryTree(root):
+    diameter = [0]
+    
+    def dfs(node):
+        if not node:
+            return 0
+        left = dfs(node.left)
+        right = dfs(node.right)
+        diameter[0] = max(diameter[0], left + right)
+        return 1 + max(left, right)
+    
+    dfs(root)
+    return diameter[0]
+
+
+# ----------------------------------------------------
+# 4. LC #101 – Symmetric Tree
+# ----------------------------------------------------
+"""
+Problem:
+Check if a tree is a mirror of itself.
+
+Approach:
+- Recursive helper to compare left subtree and right subtree
+- Conditions:
+  - Both null → True
+  - One null → False
+  - Compare values + recursive checks
+
+Time Complexity: O(n)
+"""
+
+def isSymmetric(root):
+    def isMirror(t1, t2):
+        if not t1 and not t2:
+            return True
+        if not t1 or not t2:
+            return False
+        return (t1.val == t2.val and 
+                isMirror(t1.left, t2.right) and 
+                isMirror(t1.right, t2.left))
+    return isMirror(root, root)
+
+
+# ----------------------------------------------------
+# 5. LC #437 – Path Sum III
+# ----------------------------------------------------
+"""
+Problem:
+Count the number of paths where the sum of values equals targetSum.
+Path does not need to start at root but must go downward.
+
+Approach:
+- Use DFS + HashMap (prefix sum approach)
+- Maintain current sum and check how many times (currSum - targetSum) occurred
+
+Time Complexity: O(n)
+"""
+
+def pathSum(root, targetSum):
+    from collections import defaultdict
+    
+    prefix = defaultdict(int)
+    prefix[0] = 1
+    
+    def dfs(node, currSum):
+        if not node:
+            return 0
+        currSum += node.val
+        count = prefix[currSum - targetSum]
+        prefix[currSum] += 1
+        count += dfs(node.left, currSum)
+        count += dfs(node.right, currSum)
+        prefix[currSum] -= 1
+        return count
+    
+    return dfs(root, 0)
+
+
+# ----------------------------------------------------
+# Example Usage
+# ----------------------------------------------------
+if __name__ == "__main__":
+    """
+    Example Tree:
+            5
+           / \
+          4   8
+         /   / \
+        11  13  4
+       /  \     / \
+      7    2   5   1
+    """
+    root = TreeNode(5)
+    root.left = TreeNode(4, TreeNode(11, TreeNode(7), TreeNode(2)))
+    root.right = TreeNode(8, TreeNode(13), TreeNode(4, TreeNode(5), TreeNode(1)))
+
+    print("LC #112 Path Sum:", hasPathSum(root, 22))        # True
+    print("LC #226 Invert Binary Tree:", invertTree(root))  # Inverted tree
+    print("LC #543 Diameter:", diameterOfBinaryTree(root))  # Example output
+    print("LC #101 Symmetric:", isSymmetric(root))          # False
+    print("LC #437 Path Sum III:", pathSum(root, 22))       # Count paths
